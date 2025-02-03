@@ -57,11 +57,19 @@ function Source:get_completions(context, resolve)
     end
 
     local cur_line, cur_col = unpack(context.cursor)
+    local buf_text = vim.api.nvim_buf_get_lines(0, cur_line - 1, cur_line, false)[1] or ""
+
+    -- Find the word start by scanning backward from the cursor position
+    local start_col = cur_col
+    while start_col > 0 and buf_text:sub(start_col, start_col):match("[%w%.%-%_]") do
+        start_col = start_col - 1
+    end
+    start_col = start_col + 1
 
     local range = {
         ["start"] = {
             line = cur_line - 1,
-            character = cur_col,
+            character = start_col - 1,
         },
         ["end"] = {
             line = cur_line - 1,
