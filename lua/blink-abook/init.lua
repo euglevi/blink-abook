@@ -79,7 +79,7 @@ function Source:get_completions(context, resolve)
         end
     end
 
-    resolve({ is_incomplete_forward = true, is_incomplete_backward = false, items = items })
+    resolve({ is_incomplete_forward = false, is_incomplete_backward = false, items = items })
 end
 
 return Source
