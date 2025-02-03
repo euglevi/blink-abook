@@ -74,9 +74,6 @@ function Source:get_completions(context, resolve)
                         newText = email,
                     },
                     kind = vim.lsp.protocol.CompletionItemKind.Email,
-                    labelDetails = {
-                        detail = "Abook contact email",
-                    },
                 })
             end
         end
