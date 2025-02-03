@@ -68,7 +68,7 @@ function Source:get_completions(context, resolve)
                     label = email,
                     textEdit = {
                         range = {
-                            ["start"] = { line = context.cursor[1] - 1, character = context.cursor[2] },
+                            ["start"] = { line = context.cursor[1] - 1, character = context.cursor[2] - #context.before  },
                             ["end"] = { line = context.cursor[1] - 1, character = context.cursor[2] },
                         },
                         newText = email,
