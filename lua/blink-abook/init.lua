@@ -38,14 +38,6 @@ function Source:get_completions(context, resolve)
     local header_keywords = { "Bcc:", "Cc:", "From:", "Reply-To:", "To:" }
     local is_email_header = false
 
-    -- get the starting column from which completion will start
-    local start_col = vim.api.nvim_win_get_cursor(0)
-    
-    if type(start_col) ~= "number" then
-        resolve()
-        return nil
-    end
-
     for _, keyword in ipairs(header_keywords) do
         if line:match("^%s*" .. keyword) then
             is_email_header = true
@@ -58,31 +50,24 @@ function Source:get_completions(context, resolve)
         return
     end
 
-    local cur_line, cur_col = unpack(context.cursor)
-
-    if start_col == -2 or start_col == -3 then
-	resolve()
-	return nil
-    elseif start_col < 0 or start_col > cur_col then
-	start_col = cur_col
-    end
-
-    local range = {
-	["start"] = {
-	    line = cur_line - 1,
-	    character = start_col,
-	},
-	["end"] = {
-	    line = cur_line - 1,
-	    character = cur_col,
-	},
-    }
-
     local abook_output = vim.fn.system("abook --mutt-query .")
     if vim.v.shell_error ~= 0 then
         resolve()
         return
     end
+
+    local cur_line, cur_col = unpack(context.cursor)
+
+    local range = {
+        ["start"] = {
+            line = cur_line - 1,
+            character = cur_col,
+        },
+        ["end"] = {
+            line = cur_line - 1,
+            character = cur_col,
+        },
+    }
 
     local lines = vim.split(abook_output, "\n")
     local items = {} ---@type blink.cmp.CompletionItem[]
